@@ -94,7 +94,7 @@ class Groom:
         self._horse_to_care_list = []
 
     def __str__(self):
-        temp = f'Groom name = {self.name}\nSkills: '
+        temp = f'Groom name = {self.name}\nSkills: \n'
         for skill in self._skill_list:
             temp = temp + '\n\t- ' + skill
         return temp
