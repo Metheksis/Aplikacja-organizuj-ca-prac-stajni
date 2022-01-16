@@ -1,6 +1,6 @@
 from datetime import date, datetime
 
-#Report file delimiter
+#zmienne globalne
 delimiter = ';'
 today = date.today()
 file_encoding = 'utf-8'
@@ -13,17 +13,17 @@ class Horse:
         self.breed = breed
         self.sex = sex
         self.parents = parents
-        self.feeding = feeding #Karmienie o 6 i 18 jeżeli 2 per day
+        self.feeding = feeding
         self.feeding_type = feeding_type
         self.feeding_hours = feeding_hours
-        #w kg
-        self.quantity = quantity
+        self.quantity = quantity #w gramach, system nie przyjmuje przecinkow i kropek
         self.medicament = medicament
         self.ride_dict = {}
 
     def __str__(self):
         tmp = ''
         for i in self.ride_dict.keys():
+            #konkatenacja zabookowanych jazd (kazdy kon ma swoj grafik)
             tmp = f'{tmp}\n\t * {i}\t->\t{self.ride_dict[i]}'
         return f"name = {self.name} breed = {self.breed} sex = {self.sex} parents = {self.parents} feeding = {self.feeding} feeding_type = {self.feeding_type} feeding_hours = {self.feeding_hours}, quantity = {self.quantity}, medicament = {self.medicament}\n" \
                f"Booked rides: {tmp}"
@@ -44,6 +44,8 @@ class Stable:
 
     def addHorse(self, name, breed='unspecified', sex='unspecified', parents='unspecified', feeding='unspecified', feeding_type='unspecified',
                  feeding_hours='8:00, 16:00', quantity=1, medicament='unspecified'):
+
+        #sprawdzanie poprawnosci pola quantity
         try:
             quantity = int(quantity)
         except ValueError:
@@ -57,7 +59,7 @@ class Stable:
     def deleteHorse(self, passed_horse_id):
         del self.dict_horses[passed_horse_id]
 
-    def get_horse_by_id(self, passed_horse_id):
+    def get_horse_by_id(self, passed_horse_id):     #pobieranie testowe
         return self.dict_horses[passed_horse_id]
 
     def get_horse_by_name(self, passed_horse_name):
@@ -73,7 +75,10 @@ class Stable:
 
     def generate_plan(self, groom_list, instructor_list):
         with open(f"{self.name}_plan.csv", 'w') as out_file:
+            #zapisanie do plikow parametrow klasy stable
             out_file.write(self.__str__())
+
+            #wylistowanie wszystkich pracownikow stajni
             for groom in groom_list:
                 out_file.write(groom.__str__())
             for instructor in instructor_list:
@@ -169,6 +174,7 @@ class Stable_owner:
     def __str__(self):
         return f'Stable owner name = {self.name}'
 
+#dane do testowania przed zrobieniem GUI
 def generate_test_data(passed_stable, passed_groom):
     passed_stable.addHorse("Klopsik", sex="gelding")
     passed_stable.addHorse("Płotka", sex="mare")
